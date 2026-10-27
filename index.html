@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a2e1f">
+<meta name="robots" content="noindex, nofollow">
+<title>Учёт машин</title>
+<style>
+:root {
+  --bg: #f0f2f0;
+  --card: #ffffff;
+  --fg: #0f1410;
+  --muted: #5c665e;
+  --line: #dce3dc;
+  --accent: #1a2e1f;
+  --accent2: #3d6b4f;
+  --ok: #1a7a3c;
+  --ok-bg: #e6f5eb;
+  --warn: #a35c00;
+  --warn-bg: #fef6e6;
+  --err: #b91c1c;
+  --err-bg: #fef1f1;
+  --shadow: 0 2px 12px rgba(26,46,31,.08);
+  --radius: 18px;
+  --radius-sm: 14px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+body.dark {
+  --bg: #0b0f0c;
+  --card: #141a15;
+  --fg: #eef2ef;
+  --muted: #8a958c;
+  --line: #243028;
+  --accent: #eef2ef;
+  --accent2: #5a9e72;
+  --ok: #3ecf7a;
+  --ok-bg: #0d2418;
+  --warn: #f0b429;
+  --warn-bg: #2a2110;
+  --err: #ff6b6b;
+  --err-bg: #2a1215;
+  --shadow: 0 2px 16px rgba(0,0,0,.35);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+main {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 14px 14px calc(28px + var(--safe-b));
+  min-height: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-top: 4px;
+}
+.header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.header .sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.icon-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .18s cubic-bezier(.25,.8,.25,1);
+}
+.icon-btn:active { transform: scale(0.92); }
+.vehicle-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+.vehicle-list::-webkit-scrollbar { display: none; }
+.v-pill {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 22px;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  transition: all .2s cubic-bezier(.25,.8,.25,1);
+}
+.v-pill.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.card-pad { padding: 16px; }
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.status-item {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  text-align: center;
+}
+.status-item .lbl {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.status-item .val {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+label {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+input, select, textarea {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0 14px;
+  font-size: 17px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235c665e' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 3px rgba(61,107,79,.18);
+}
+textarea {
+  height: auto;
+  min-height: 70px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.row > div { min-width: 0; }
+.result {
+  background: linear-gradient(145deg, #1a2e1f 0%, #243d2c 100%);
+  color: #f8f8fa;
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+body.dark .result {
+  background: linear-gradient(145deg, #1a2e1f 0%, #0f1a12 100%);
+  border: 1px solid var(--line);
+}
+.result .label {
+  font-size: 13px;
+  opacity: 0.65;
+  letter-spacing: 0.6px;
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+.result .big {
+  font-size: 36px;
+  font-weight: 820;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.r-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-size: 15px;
+}
+.r-line strong { font-weight: 700; }
+button {
+  height: 52px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--fg);
+  border: 1.5px solid var(--line);
+  transition: transform .15s, opacity .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active { transform: scale(0.97); }
+button.primary {
+  background: linear-gradient(145deg, #1a2e1f 0%, #2a4a35 100%);
+  color: #f8f8fa;
+  border: none;
+  box-shadow: 0 4px 16px rgba(26,46,31,.25);
+}
+body.dark button.primary {
+  background: linear-gradient(145deg, #eef2ef 0%, #d0d8d2 100%);
+  color: #0f1410;
+}
+button.full { width: 100%; }
+button.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  height: 44px;
+  font-size: 15px;
+}
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.quick-fuel {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -4px 0 14px;
+}
+.qf {
+  height: 38px !important;
+  padding: 0 14px;
+  font-size: 14px !important;
+  font-weight: 700;
+  border-radius: 20px;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  color: var(--fg);
+}
+.qf:active {
+  background: var(--accent2);
+  color: #fff;
+  border-color: var(--accent2);
+}
+.period-card {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.period-card:last-child { border-bottom: none; }
+.period-dates {
+  font-size: 16px;
+  font-weight: 750;
+  margin-bottom: 4px;
+}
+.period-meta {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s cubic-bezier(.25,.8,.25,1);
+}
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal {
+  background: var(--card);
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px 24px 0 0;
+  padding: 22px 16px calc(22px + var(--safe-b));
+  max-height: 92vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform .36s cubic-bezier(.25,.85,.25,1);
+  box-shadow: 0 -12px 40px rgba(0,0,0,.25);
+}
+.overlay.show .modal { transform: translateY(0); }
+.modal h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.modal .desc {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+.empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--muted);
+  font-size: 16px;
+}
+.toast {
+  text-align: center;
+  font-size: 15px;
+  color: var(--muted);
+  min-height: 22px;
+  margin-top: 10px;
+}
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn .3s cubic-bezier(.25,.8,.25,1); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+<main id="app">
+  <div class="header">
+    <div>
+      <h1>Учёт машин</h1>
+      <div class="sub" id="headerSub">Выберите машину</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" id="themeBtn" type="button">☾</button>
+      <button class="icon-btn" id="menuBtn" type="button">⋯</button>
+    </div>
+  </div>
+
+  <div class="vehicle-list" id="vehicleList"></div>
+
+  <section class="card" id="statusCard">
+    <div class="card-pad">
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="lbl">Пробег</div>
+          <div class="val" id="sumOdo">—</div>
+        </div>
+        <div class="status-item">
+          <div class="lbl">В баке</div>
+          <div class="val" id="sumFuel">—</div>
+        </div>
+      </div>
+      <div style="font-size:14px;color:var(--muted);margin-top:12px;text-align:center" id="carMeta">—</div>
+    </div>
+  </section>
+
+  <section class="card" id="periodCard">
+    <div class="card-pad">
+      <div class="card-title">Новый период работы</div>
+
+      <div class="row">
+        <div>
+          <label>С какого числа</label>
+          <input id="dateFrom" type="date">
+        </div>
+        <div>
+          <label>По какое число</label>
+          <input id="dateTo" type="date">
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Проехал, км</label>
+          <input id="kmTotal" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+        </div>
+        <div>
+          <label>Конечный пробег</label>
+          <input id="odoEnd" type="text" inputmode="numeric" placeholder="—" autocomplete="off">
+        </div>
+      </div>
+
+      <label>Заправил, л</label>
+      <input id="tankAdded" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+      <div class="quick-fuel" id="quickFuel">
+        <button type="button" class="qf" data-v="10">+10</button>
+        <button type="button" class="qf" data-v="20">+20</button>
+        <button type="button" class="qf" data-v="30">+30</button>
+        <button type="button" class="qf" data-v="40">+40</button>
+        <button type="button" class="qf" data-v="50">+50</button>
+      </div>
+
+      <label>Коэффициент надбавки</label>
+      <select id="allowance">
+        <option value="0">0% — без надбавок</option>
+        <option value="15">15% — город</option>
+        <option value="6">6% — климат</option>
+        <option value="21" selected>6% + 15% (климат + город)</option>
+        <option value="custom">Свой %</option>
+      </select>
+      <div id="customBox" class="hidden">
+        <label>Своя надбавка, %</label>
+        <input id="custom" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+      </div>
+
+      <label>Комментарий <span style="opacity:.6">(необязательно)</span></label>
+      <input id="comment" type="text" placeholder="Маршрут, примечание..." maxlength="120" autocomplete="off">
+    </div>
+  </section>
+
+  <section class="result fade-in" id="resultBlock">
+    <div class="label">РАСХОД ЗА ПЕРИОД</div>
+    <div class="big"><span id="consumption">0</span> л</div>
+    <div class="r-line"><span>Период</span><strong id="periodOut">—</strong></div>
+    <div class="r-line"><span>Пробег</span><strong id="totalKm">0 км</strong></div>
+    <div class="r-line"><span>Заправлено</span><strong id="addedOut">0 л</strong></div>
+    <div class="r-line"><span>Бак станет</span><strong id="endOut">0 л</strong></div>
+  </section>
+
+  <button class="primary full" id="savePeriodBtn" type="button">Сохранить период</button>
+  <div class="btn-row">
+    <button id="sendBtn" type="button">Отправить отчёт</button>
+    <button id="copyBtn" type="button">Копировать</button>
+  </div>
+  <p class="toast" id="status"></p>
+
+  <section class="card" id="historyCard">
+    <div class="card-pad">
+      <div class="card-title">История периодов</div>
+      <div id="historyList"></div>
+      <button class="ghost full" id="clearHistory" type="button" style="margin-top:8px">Очистить историю</button>
+    </div>
+  </section>
+
+  <div style="text-align:center;margin-top:16px">
+    <button class="ghost" id="addVehicleBtn" type="button">+ Добавить машину</button>
+  </div>
+</main>
+
+<div class="overlay" id="vehicleOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Новая машина</h3>
+    <p class="desc" id="modalDesc">Данные сохраняются на этом телефоне и привязаны к машине.</p>
+
+    <label>Марка / модель</label>
+    <select id="mCar"></select>
+
+    <label>Позывной / код</label>
+    <input id="mCode" type="text" placeholder="М-12 или любой код" maxlength="16" autocomplete="off">
+
+    <label>ФИО водителя <span style="opacity:.55">(необязательно)</span></label>
+    <input id="mFio" type="text" placeholder="Иванов И.И." maxlength="60" autocomplete="name">
+
+    <div class="row">
+      <div>
+        <label>Текущий пробег</label>
+        <input id="mOdo" type="text" inputmode="numeric" placeholder="0" autocomplete="off">
+      </div>
+      <div>
+        <label>Бак сейчас, л</label>
+        <input id="mFuel" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+      </div>
+    </div>
+
+    <div id="mManualBox" class="hidden">
+      <label>Норма расхода (л/км)</label>
+      <input id="mManualNorm" type="text" inputmode="decimal" value="0,098" autocomplete="off">
+    </div>
+
+    <button class="primary full" id="modalSave" type="button" style="margin-top:8px">Сохранить</button>
+    <button class="ghost full" id="modalCancel" type="button">Отмена</button>
+  </div>
+</div>
+
+<div class="overlay" id="menuOverlay">
+  <div class="modal" style="padding-bottom: calc(16px + var(--safe-b))">
+    <h3 style="margin-bottom:16px">Меню</h3>
+    <button class="full" id="menuEdit" type="button" style="margin-bottom:10px">Изменить текущую машину</button>
+    <button class="full" id="menuReset" type="button" style="margin-bottom:10px;color:var(--err)">Сбросить всё</button>
+    <button class="ghost full" id="menuClose" type="button">Закрыть</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const STORAGE = 'uchet_v1';
+
+  const CARS = [
+    ['Москвич 3', 50, 'АИ-92', 0.098],
+    ['SENAT 900', 62, 'АИ-95', null],
+    ['Haval Jolion', 55, 'АИ-92', 0.092],
+    ['Hyundai Sonata', 60, 'АИ-92', 0.087],
+    ['Луидор-225033', 80, 'АИ-92', 0.16],
+    ['Аврора - 311302', 80, 'ДТ', 0.127],
+    ['ПАЗ - 32053 - 50', 105, 'АИ-92', 0.32],
+    ['ПАЗ - 320530 - 02', 105, 'АИ-92', 0.339],
+    ['КАВЗ 4238 - 62', 170, 'ДТ', 0.36],
+    ['КАВЗ 4238 - D1', 170, 'ДТ', 0.373],
+    ['ПАЗ - 4234 - 04', 95, 'ДТ', 0.224],
+    ['Volkswagen M', 80, 'ДТ', 0.084],
+    ['ГАЗ A65 R32', 80, 'ДТ', 0.154],
+    ['ACM - 535251', 80, 'ДТ', 0.15],
+    ['Sollers Atlant', 80, 'ДТ', 0.121],
+    ['Ford Transit', 80, 'ДТ', 0.145]
+  ];
+
+  let vehicles = [];
+  let activeId = null;
+  let editMode = false;
+  let saveTimer = null;
+
+  const num = v => {
+    const raw = String(v ?? '').trim().replace(',', '.');
+    if (raw === '' || raw === '-') return 0;
+    const n = Number(raw);
+    return Number.isFinite(n) ? Math.max(0, n) : 0;
+  };
+  const fmt = (x, d = 1) => (Number(x) || 0).toLocaleString('ru-RU', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const round = (x, d = 1) => Math.round((Number(x) || 0) * 10 ** d) / 10 ** d;
+  const uid = () => Math.random().toString(36).slice(2, 10);
+  const toast = msg => {
+    $('status').textContent = msg;
+    setTimeout(() => { if ($('status').textContent === msg) $('status').textContent = ''; }, 2500);
+  };
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  function carData(v) {
+    const c = CARS[v.carIdx] || CARS[0];
+    return {
+      name: c[0],
+      tank: c[1],
+      fuelType: c[2],
+      norm: v.manualNorm != null && v.manualNorm !== '' ? num(v.manualNorm) : c[3]
+    };
+  }
+  function active() {
+    return vehicles.find(v => v.id === activeId) || vehicles[0];
+  }
+
+  function collect() {
+    return {
+      vehicles,
+      activeId,
+      dark: document.body.classList.contains('dark')
+    };
+  }
+  function save(show) {
+    try {
+      localStorage.setItem(STORAGE, JSON.stringify(collect()));
+      if (show) toast('Сохранено');
+    } catch (e) {
+      if (show) toast('Ошибка сохранения');
+    }
+  }
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => save(false), 400);
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE);
+      if (!raw) return false;
+      const s = JSON.parse(raw);
+      if (Array.isArray(s.vehicles) && s.vehicles.length) {
+        vehicles = s.vehicles;
+        activeId = s.activeId || vehicles[0].id;
+        if (s.dark) {
+          document.body.classList.add('dark');
+          $('themeBtn').textContent = '☀';
+        }
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function renderVehicleList() {
+    const list = $('vehicleList');
+    if (!vehicles.length) {
+      list.innerHTML = '';
+      return;
+    }
+    list.innerHTML = vehicles.map(v => {
+      const c = carData(v);
+      return `<div class="v-pill${v.id === activeId ? ' active' : ''}" data-id="${v.id}">${c.name} · ${v.code || '—'}</div>`;
+    }).join('');
+  }
+
+  function renderHeader() {
+    const v = active();
+    if (!v) {
+      $('headerSub').textContent = 'Добавьте первую машину';
+      $('sumOdo').textContent = '—';
+      $('sumFuel').textContent = '—';
+      $('carMeta').textContent = '—';
+      return;
+    }
+    const c = carData(v);
+    $('headerSub').textContent = `${c.name} · ${v.code || '—'}`;
+    $('sumOdo').textContent = fmt(v.odo, 0);
+    $('sumFuel').textContent = fmt(v.fuel, 1) + ' л';
+    $('carMeta').textContent = `${c.fuelType} · норма ${c.norm ? fmt(c.norm * 100, 1) + ' л/100км' : 'ручная'} · бак ${c.tank} л`;
+  }
+
+  function renderHistory() {
+    const v = active();
+    const list = $('historyList');
+    if (!v || !v.periods || !v.periods.length) {
+      list.innerHTML = '<div class="empty">Пока нет периодов</div>';
+      return;
+    }
+    const rows = [...v.periods].reverse();
+    list.innerHTML = rows.map(p => `
+      <div class="period-card">
+        <div class="period-dates">${p.dateFrom || '—'} → ${p.dateTo || '—'}</div>
+        <div class="period-meta">
+          ${fmt(p.km, 0)} км · расход ${fmt(p.cons, 1)} л · запр. ${fmt(p.added, 1)} л
+          ${p.comment ? '<br>' + p.comment : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function update() {
+    const v = active();
+    if (!v) return;
+    const c = carData(v);
+    const kmTotal = num($('kmTotal').value);
+    let added = num($('tankAdded').value);
+    let allow = +$('allowance').value;
+    if ($('allowance').value === 'custom') allow = num($('custom').value);
+
+    const baseNorm = c.norm || 0.1;
+    const norm = baseNorm * (1 + allow / 100);
+    const cons = round(kmTotal * norm, 2);
+    const endFuel = round(v.fuel + added - cons, 1);
+    const dateFrom = $('dateFrom').value;
+    const dateTo = $('dateTo').value;
+
+    $('consumption').textContent = fmt(cons, 1);
+    $('periodOut').textContent = (dateFrom && dateTo) ? `${dateFrom} → ${dateTo}` : '—';
+    $('totalKm').textContent = fmt(kmTotal, 0) + ' км';
+    $('addedOut').textContent = fmt(added, 1) + ' л';
+    $('endOut').textContent = fmt(endFuel, 1) + ' л';
+  }
+
+  function savePeriod() {
+    const v = active();
+    if (!v) { toast('Сначала добавьте машину'); return; }
+
+    const dateFrom = $('dateFrom').value;
+    const dateTo = $('dateTo').value;
+    const kmTotal = num($('kmTotal').value);
+
+    if (!dateFrom || !dateTo) { toast('Укажите даты периода'); return; }
+    if (kmTotal <= 0) { toast('Введите пробег'); return; }
+
+    let added = num($('tankAdded').value);
+    let allow = +$('allowance').value;
+    if ($('allowance').value === 'custom') allow = num($('custom').value);
+
+    const c = carData(v);
+    const norm = (c.norm || 0.1) * (1 + allow / 100);
+    const cons = round(kmTotal * norm, 2);
+    const odoEnd = num($('odoEnd').value);
+    const newOdo = odoEnd > 0 ? odoEnd : round(v.odo + kmTotal, 0);
+    const endFuel = round(v.fuel + added - cons, 1);
+
+    v.periods = v.periods || [];
+    v.periods.push({
+      id: uid(),
+      dateFrom,
+      dateTo,
+      km: kmTotal,
+      cons,
+      added,
+      fuelStart: v.fuel,
+      fuelEnd: endFuel,
+      odo: newOdo,
+      allow,
+      comment: $('comment').value.trim(),
+      createdAt: new Date().toISOString()
+    });
+
+    v.odo = newOdo;
+    v.fuel = Math.max(0, endFuel);
+
+    $('kmTotal').value = '';
+    $('odoEnd').value = '';
+    $('tankAdded').value = '';
+    $('comment').value = '';
+    $('dateFrom').value = today();
+    $('dateTo').value = today();
+
+    renderHeader();
+    renderHistory();
+    update();
+    save(true);
+    toast('Период сохранён');
+  }
+
+  function openVehicleModal(edit) {
+    editMode = !!edit;
+    $('modalTitle').textContent = edit ? 'Изменить машину' : 'Новая машина';
+    $('modalDesc').textContent = edit
+      ? 'Можно поменять модель, позывной и текущие показания.'
+      : 'Данные сохраняются на этом телефоне и привязаны к машине.';
+
+    if (edit && active()) {
+      const v = active();
+      $('mCar').value = v.carIdx;
+      $('mCode').value = v.code || '';
+      $('mFio').value = v.fio || '';
+      $('mOdo').value = v.odo || '';
+      $('mFuel').value = String(v.fuel).replace('.', ',');
+      $('mManualNorm').value = v.manualNorm || '';
+    } else {
+      $('mCar').value = 0;
+      $('mCode').value = '';
+      $('mFio').value = '';
+      $('mOdo').value = '';
+      $('mFuel').value = '';
+    }
+    onCarChange();
+    $('vehicleOverlay').classList.add('show');
+  }
+
+  function closeVehicleModal() {
+    $('vehicleOverlay').classList.remove('show');
+  }
+
+  function onCarChange() {
+    const idx = +$('mCar').value;
+    const c = CARS[idx];
+    $('mManualBox').classList.toggle('hidden', c[3] !== null);
+    if (c[3] != null) $('mManualNorm').value = String(c[3]).replace('.', ',');
+  }
+
+  function saveVehicle() {
+    const code = $('mCode').value.trim().toUpperCase().replace(/\s+/g, '');
+    if (!code) { toast('Введите позывной или код'); $('mCode').focus(); return; }
+
+    const odo = num($('mOdo').value);
+    const fuel = num($('mFuel').value);
+    const carIdx = +$('mCar').value;
+    const c = CARS[carIdx];
+    if (fuel > c[1] + 0.5) { toast(`Бак максимум ${c[1]} л`); return; }
+
+    if (editMode && active()) {
+      const v = active();
+      v.carIdx = carIdx;
+      v.code = code;
+      v.fio = $('mFio').value.trim();
+      v.odo = odo;
+      v.fuel = fuel;
+      v.manualNorm = $('mManualNorm').value;
+    } else {
+      const v = {
+        id: uid(),
+        carIdx,
+        code,
+        fio: $('mFio').value.trim(),
+        odo,
+        fuel,
+        periods: [],
+        manualNorm: $('mManualNorm').value
+      };
+      vehicles.push(v);
+      activeId = v.id;
+    }
+
+    closeVehicleModal();
+    renderVehicleList();
+    renderHeader();
+    renderHistory();
+    update();
+    save(true);
+  }
+
+  function sendReport() {
+    const v = active();
+    if (!v || !v.periods || !v.periods.length) {
+      toast('Нет периодов для отправки');
+      return;
+    }
+    const c = carData(v);
+    const last = v.periods[v.periods.length - 1];
+    const text = [
+      `Машина: ${c.name} (${v.code})`,
+      `Водитель: ${v.fio || '—'}`,
+      `Период: ${last.dateFrom} → ${last.dateTo}`,
+      `Пробег: ${fmt(last.km, 0)} км`,
+      `Расход: ${fmt(last.cons, 1)} л`,
+      `Заправлено: ${fmt(last.added, 1)} л`,
+      `Бак: ${fmt(last.fuelEnd, 1)} л`,
+      last.comment ? `Комментарий: ${last.comment}` : ''
+    ].filter(Boolean).join('\n');
+
+    navigator.clipboard.writeText(text)
+      .then(() => toast('Отчёт скопирован. Подключите Google Таблицу для автоотправки'))
+      .catch(() => toast('Не удалось скопировать'));
+  }
+
+  function bind() {
+    $('themeBtn').onclick = () => {
+      document.body.classList.toggle('dark');
+      $('themeBtn').textContent = document.body.classList.contains('dark') ? '☀' : '☾';
+      scheduleSave();
+    };
+
+    $('vehicleList').addEventListener('click', e => {
+      const pill = e.target.closest('.v-pill');
+      if (!pill) return;
+      activeId = pill.dataset.id;
+      renderVehicleList();
+      renderHeader();
+      renderHistory();
+      update();
+      save(false);
+    });
+
+    ['kmTotal', 'odoEnd', 'tankAdded', 'custom', 'allowance', 'dateFrom', 'dateTo'].forEach(id => {
+      $(id).addEventListener('input', update);
+      $(id).addEventListener('change', update);
+    });
+    $('allowance').addEventListener('change', () => {
+      $('customBox').classList.toggle('hidden', $('allowance').value !== 'custom');
+      update();
+    });
+
+    $('quickFuel').addEventListener('click', e => {
+      const btn = e.target.closest('.qf');
+      if (!btn) return;
+      const add = +btn.dataset.v;
+      const cur = num($('tankAdded').value);
+      $('tankAdded').value = String(cur + add).replace('.', ',');
+      update();
+    });
+
+    $('savePeriodBtn').onclick = savePeriod;
+    $('sendBtn').onclick = sendReport;
+    $('copyBtn').onclick = () => {
+      const text = `Расход: ${$('consumption').textContent} л\nПериод: ${$('periodOut').textContent}\nПробег: ${$('totalKm').textContent}\nЗаправлено: ${$('addedOut').textContent}`;
+      navigator.clipboard.writeText(text).then(() => toast('Скопировано')).catch(() => toast('Ошибка'));
+    };
+    $('clearHistory').onclick = () => {
+      if (!confirm('Очистить историю текущей машины?')) return;
+      const v = active();
+      if (v) v.periods = [];
+      renderHistory();
+      save(true);
+    };
+    $('addVehicleBtn').onclick = () => openVehicleModal(false);
+
+    $('mCar').addEventListener('change', onCarChange);
+    $('modalSave').onclick = saveVehicle;
+    $('modalCancel').onclick = closeVehicleModal;
+    $('vehicleOverlay').addEventListener('click', e => {
+      if (e.target === $('vehicleOverlay')) closeVehicleModal();
+    });
+
+    $('menuBtn').onclick = () => $('menuOverlay').classList.add('show');
+    $('menuClose').onclick = () => $('menuOverlay').classList.remove('show');
+    $('menuEdit').onclick = () => {
+      $('menuOverlay').classList.remove('show');
+      openVehicleModal(true);
+    };
+    $('menuReset').onclick = () => {
+      if (!confirm('Сбросить ВСЕ данные и машины?')) return;
+      localStorage.removeItem(STORAGE);
+      vehicles = [];
+      activeId = null;
+      $('menuOverlay').classList.remove('show');
+      renderVehicleList();
+      renderHeader();
+      renderHistory();
+      update();
+      openVehicleModal(false);
+      toast('Всё сброшено');
+    };
+    $('menuOverlay').addEventListener('click', e => {
+      if (e.target === $('menuOverlay')) $('menuOverlay').classList.remove('show');
+    });
+
+    window.addEventListener('beforeunload', () => {
+      try { localStorage.setItem(STORAGE, JSON.stringify(collect())); } catch (e) {}
+    });
+  }
+
+  (function init() {
+    $('mCar').innerHTML = CARS.map((c, i) => `<option value="${i}">${c[0]}</option>`).join('');
+    $('dateFrom').value = today();
+    $('dateTo').value = today();
+    bind();
+    const hasData = load();
+    if (!hasData || !vehicles.length) {
+      openVehicleModal(false);
+    } else {
+      renderVehicleList();
+      renderHeader();
+      renderHistory();
+      update();
+    }
+  })();
+})();
+</script>
+</body>
+</html>
