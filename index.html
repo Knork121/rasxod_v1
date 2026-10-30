@@ -1,171 +1,258 @@
+Claude
+/
+
+
+
+
+
+
+
+
+
+
+
+
+Uchet mashin · HTML
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a2e1f">
-<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a3a2b">
 <title>Учёт машин</title>
 <style>
-:root{--bg:#f0f2f0;--card:#fff;--fg:#0f1410;--muted:#5c665e;--line:#dce3dc;--accent:#1a2e1f;--accent2:#3d6b4f;--ok:#1a7a3c;--ok-bg:#e6f5eb;--warn:#a35c00;--warn-bg:#fef6e6;--err:#b91c1c;--err-bg:#fef1f1;--shadow:0 2px 12px rgba(26,46,31,.08);--radius:16px;--radius-sm:12px;--safe-b:env(safe-area-inset-bottom,0px);--font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif}
-body.dark{--bg:#0b0f0c;--card:#141a15;--fg:#eef2ef;--muted:#8a958c;--line:#243028;--accent:#eef2ef;--accent2:#5a9e72;--ok:#3ecf7a;--ok-bg:#0d2418;--warn:#f0b429;--warn-bg:#2a2110;--err:#ff6b6b;--err-bg:#2a1215;--shadow:0 2px 16px rgba(0,0,0,.35)}
-*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden}main{max-width:440px;margin:0 auto;padding:12px 12px calc(24px + var(--safe-b));min-height:100%}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.header h1{font-size:22px;font-weight:800;letter-spacing:-.3px}.header .sub{font-size:13px;color:var(--muted);margin-top:1px}
-.icon-btn{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--fg);font-size:17px;display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s cubic-bezier(.25,.8,.25,1)}.icon-btn:active{transform:scale(.9)}
-.vehicle-list{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}.vehicle-list::-webkit-scrollbar{display:none}.v-pill{flex-shrink:0;height:36px;padding:0 14px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);font-size:14px;font-weight:650;color:var(--muted);display:flex;align-items:center;cursor:pointer;white-space:nowrap;box-shadow:var(--shadow);transition:all .22s cubic-bezier(.25,.8,.25,1)}.v-pill.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
-.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;transition:box-shadow .25s cubic-bezier(.25,.8,.25,1)}.card-pad{padding:14px}.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px}
-.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status-item{background:var(--bg);border-radius:var(--radius-sm);padding:12px 10px;text-align:center}.status-item .lbl{font-size:12px;color:var(--muted);margin-bottom:2px;font-weight:600}.status-item .val{font-size:20px;font-weight:800;letter-spacing:-.4px}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px;font-weight:600}input,select,textarea{width:100%;height:48px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);color:var(--fg);padding:0 12px;font-size:16px;margin-bottom:10px;outline:none;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none}select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235c665e' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}input:focus,select:focus,textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(61,107,79,.18)}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row>div{min-width:0}
-.check{font-size:13px;color:var(--muted);margin:-4px 0 8px;font-weight:550}.check.ok{color:var(--ok)}.check.bad{color:var(--err)}
-.result{background:linear-gradient(145deg,#1a2e1f 0%,#243d2c 100%);color:#f8f8fa;border-radius:var(--radius);padding:16px 14px;margin-bottom:10px;box-shadow:var(--shadow);animation:slideUp .32s cubic-bezier(.25,.8,.25,1)}body.dark .result{background:linear-gradient(145deg,#1a2e1f 0%,#0f1a12 100%);border:1px solid var(--line)}.result .label{font-size:12px;opacity:.6;letter-spacing:.6px;font-weight:650;margin-bottom:3px}.result .big{font-size:32px;font-weight:820;letter-spacing:-1px;line-height:1.1;margin-bottom:12px}.r-line{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.12);font-size:14px}.r-line strong{font-weight:700}
-button{height:50px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;background:var(--card);color:var(--fg);border:1.5px solid var(--line);transition:transform .16s cubic-bezier(.25,.8,.25,1),opacity .15s;-webkit-tap-highlight-color:transparent}button:active{transform:scale(.97)}button.primary{background:linear-gradient(145deg,#1a2e1f 0%,#2a4a35 100%);color:#f8f8fa;border:none;box-shadow:0 4px 14px rgba(26,46,31,.22)}body.dark button.primary{background:linear-gradient(145deg,#eef2ef 0%,#d0d8d2 100%);color:#0f1410}button.full{width:100%}button.ghost{background:transparent;border-color:transparent;color:var(--muted);height:42px;font-size:14px}.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.quick-fuel{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 12px}.qf{height:34px!important;padding:0 12px;font-size:13px!important;font-weight:700;border-radius:18px;background:var(--bg);border:1.5px solid var(--line);color:var(--fg);transition:all .18s cubic-bezier(.25,.8,.25,1)}.qf:active{background:var(--accent2);color:#fff;border-color:var(--accent2);transform:scale(.94)}
-.period-card{padding:12px 0;border-bottom:1px solid var(--line)}.period-card:last-child{border-bottom:none}.period-dates{font-size:15px;font-weight:750;margin-bottom:3px}.period-meta{font-size:13px;color:var(--muted);line-height:1.4}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s cubic-bezier(.25,.8,.25,1)}.overlay.show{opacity:1;pointer-events:auto}.modal{background:var(--card);width:100%;max-width:440px;border-radius:22px 22px 0 0;padding:20px 14px calc(20px + var(--safe-b));max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform .36s cubic-bezier(.25,.85,.25,1);box-shadow:0 -12px 40px rgba(0,0,0,.25)}.overlay.show .modal{transform:translateY(0)}.modal h3{font-size:20px;font-weight:800;margin-bottom:4px}.modal .desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.4}
-.empty{text-align:center;padding:28px 14px;color:var(--muted);font-size:15px}.toast{text-align:center;font-size:14px;color:var(--muted);min-height:20px;margin-top:8px}.hidden{display:none!important}
-@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.fade-in{animation:fadeIn .28s cubic-bezier(.25,.8,.25,1)}
+:root{--bg:#edf2ee;--card:#fff;--fg:#0e1a13;--mut:#66776c;--line:#e2e9e4;--f:#f2f6f3;--ac:#0f9f62;--on:#fff;--am:#e08a00;--er:#dc3b40;--sh:0 1px 2px rgba(14,26,19,.05),0 8px 22px rgba(14,26,19,.07);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080d0a;--card:#111a14;--fg:#eaf3ed;--mut:#85978b;--line:#1f2d24;--f:#0b120d;--ac:#34d399;--on:#04251a;--am:#fbbf24;--er:#ff7b7b;--sh:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#080d0a;--card:#111a14;--fg:#eaf3ed;--mut:#85978b;--line:#1f2d24;--f:#0b120d;--ac:#34d399;--on:#04251a;--am:#fbbf24;--er:#ff7b7b;--sh:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{min-height:100vh;background:var(--bg);color:var(--fg);font:15px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-variant-numeric:tabular-nums}
+main{max-width:440px;margin:0 auto;padding:10px 10px 30px}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;transition:transform .15s,background .2s,color .2s}button:active{transform:scale(.95)}
+.hidden{display:none!important}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:8px}.top h1{font-size:19px;font-weight:800;letter-spacing:-.3px;flex:1}
+.ib{width:36px;height:36px;border-radius:12px;background:var(--card);box-shadow:var(--sh);font-size:16px}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -10px 8px;padding:2px 10px 6px}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:32px;padding:0 13px;border-radius:16px;background:var(--card);box-shadow:var(--sh);font-size:13px;font-weight:650;color:var(--mut);white-space:nowrap}.chip.on{background:var(--fg);color:var(--bg)}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;color:#fff;background:radial-gradient(110% 120% at 100% 0,rgba(52,211,153,.35),transparent 55%),linear-gradient(135deg,#082f23,#0d5c3f);box-shadow:var(--sh);margin-bottom:8px}
+.hg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hg small{display:block;font-size:12px;opacity:.65;font-weight:600}
+.hg b{display:block;font-size:30px;line-height:1.1;font-weight:800;letter-spacing:-.9px}.hg em{font-size:14px;font-style:normal;opacity:.6;margin-left:3px;font-weight:700}
+.hg i{display:block;font-style:normal;font-size:12.5px;height:17px;color:#6ee7b7;font-weight:700;opacity:0;transition:opacity .3s}.hg i.s{opacity:1}.hg i.w{color:#fbbf24}
+.gauge{height:10px;border-radius:5px;background:rgba(255,255,255,.14);position:relative;margin:6px 0 7px;overflow:hidden}
+.gauge u{position:absolute;inset:0 auto 0 0;border-radius:5px;width:0;transition:width .8s cubic-bezier(.2,.9,.3,1),background .3s}
+.gauge .n{background:rgba(255,255,255,.3)}.gauge .a{background:#6ee7b7}.gauge.low .a{background:#fbbf24}.gauge.neg .a{background:#ff7b7b}
+.meta{font-size:12px;opacity:.7;text-align:center}
+.card{background:var(--card);border-radius:18px;padding:10px;box-shadow:var(--sh);margin-bottom:8px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}.g>*{min-width:0}
+.f{display:block;background:var(--f);border:1.5px solid transparent;border-radius:12px;padding:6px 10px 3px;transition:border-color .2s,box-shadow .2s,background .2s}
+.f:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent);background:var(--card)}
+.f span{display:block;font-size:11.5px;font-weight:600;color:var(--mut)}
+.f input,.f select{width:100%;border:0;background:none;outline:0;color:var(--fg);font-size:17px;font-weight:700;font-family:inherit;height:26px;padding:0;-webkit-appearance:none;appearance:none;min-height:26px}
+.f input[type=date]::-webkit-date-and-time-value{text-align:left}
+.f+.f,.card>.f{margin-bottom:6px}
+.sp{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--f);margin:2px 0 4px}.sp u{height:100%;width:0;transition:width .5s cubic-bezier(.2,.9,.3,1)}
+.d1{background:var(--ac)}.d2{background:var(--am)}
+.ck{font-size:12px;color:var(--mut);display:flex;justify-content:space-between;margin-bottom:8px}.ck.ok b{color:var(--ac)}.ck.bad b,.ck.bad span{color:var(--er)}
+.qs{display:flex;gap:5px;margin:0 0 8px}.qs button{flex:1;height:32px;border-radius:10px;background:var(--f);font-size:13px;font-weight:700}.qs button:active{background:var(--ac);color:var(--on)}
+.lb{font-size:12px;font-weight:600;color:var(--mut);margin-bottom:4px}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:6px}
+.seg button{height:42px;border-radius:11px;background:var(--f);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15}
+.seg b{font-size:14px;font-weight:800}.seg small{font-size:10px;opacity:.65}.seg .on{background:var(--ac);color:var(--on)}
+.rt{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4px}.rt>div:last-child{text-align:right}
+.big{font-size:44px;line-height:1;font-weight:850;letter-spacing:-1.8px;color:var(--ac)}.big em{font-size:18px;font-style:normal;margin-left:3px;letter-spacing:0}
+.km{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.bd{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:13px}.bd i{width:8px;height:8px;border-radius:50%;flex:none}.bd span{flex:1;color:var(--mut)}.bd b{font-weight:700}
+.wn{margin-top:4px;padding:7px 10px;border-radius:10px;font-size:12.5px;font-weight:650;color:var(--er);background:color-mix(in srgb,var(--er) 12%,transparent)}.wn:empty{display:none}
+.act{display:grid;grid-template-columns:1fr 46px 46px;gap:6px;margin-top:8px}
+.pr{height:46px;border-radius:13px;background:var(--ac);color:var(--on);font-weight:800;font-size:15px}.pr.done{background:var(--fg);color:var(--bg)}
+.ib2{height:46px;border-radius:13px;background:var(--f);font-size:18px}
+summary{list-style:none;font-weight:700;display:flex;justify-content:space-between;cursor:pointer;padding:2px 2px}summary::-webkit-details-marker{display:none}summary span{color:var(--mut);font-weight:600}
+details[open] summary{margin-bottom:6px}
+.hr{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:13px}.hr small{display:block;color:var(--mut);font-size:12px}.hr>div:last-child{text-align:right}
+.em{text-align:center;color:var(--mut);padding:12px 0;font-size:14px}
+.gh{width:100%;height:38px;color:var(--mut);font-size:13px;font-weight:600}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:9;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}.ov.show{opacity:1;pointer-events:auto}
+.sh{width:100%;max-width:440px;background:var(--card);border-radius:22px 22px 0 0;padding:16px 12px calc(14px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.9,.3,1)}.ov.show .sh{transform:none}
+.sh h3{font-size:18px;margin-bottom:10px}.sh .pr{width:100%;margin-top:4px}.sh .menu{width:100%;height:46px;border-radius:13px;background:var(--f);font-weight:700;margin-bottom:6px}
+.ts{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:13px;font-weight:650;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s cubic-bezier(.2,.9,.3,1);z-index:20;white-space:nowrap}.ts.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <main id="app">
-  <div class="header">
-    <div><h1>Учёт машин</h1><div class="sub" id="headerSub">Выберите машину</div></div>
-    <div style="display:flex;gap:7px">
-      <button class="icon-btn" id="themeBtn" type="button">☾</button>
-      <button class="icon-btn" id="menuBtn" type="button">⋯</button>
-    </div>
-  </div>
-  <div class="vehicle-list" id="vehicleList"></div>
-  <section class="card"><div class="card-pad">
-    <div class="status-grid">
-      <div class="status-item"><div class="lbl">Пробег</div><div class="val" id="sumOdo">—</div></div>
-      <div class="status-item"><div class="lbl">В баке</div><div class="val" id="sumFuel">—</div></div>
-    </div>
-    <div style="font-size:13px;color:var(--muted);margin-top:10px;text-align:center" id="carMeta">—</div>
-  </div></section>
-  <section class="card"><div class="card-pad">
-    <div class="card-title">Период работы</div>
-    <div class="row">
-      <div><label>С какого числа</label><input id="dateFrom" type="date"></div>
-      <div><label>По какое число</label><input id="dateTo" type="date"></div>
-    </div>
-    <div class="row">
-      <div><label>Проехал, км</label><input id="kmTotal" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
-      <div><label>Конечный пробег</label><input id="odoEnd" type="text" inputmode="numeric" placeholder="—" autocomplete="off"></div>
-    </div>
-    <div class="row">
-      <div><label>По МКАДу, км</label><input id="kmMkad" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
-      <div><label>Без МКАДа, км</label><input id="kmOther" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
-    </div>
-    <p class="check" id="kmCheck">МКАД + без = 0 км</p>
-    <label>Заправил, л</label>
-    <input id="tankAdded" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
-    <div class="quick-fuel" id="quickFuel">
-      <button type="button" class="qf" data-v="10">+10</button>
-      <button type="button" class="qf" data-v="20">+20</button>
-      <button type="button" class="qf" data-v="30">+30</button>
-      <button type="button" class="qf" data-v="40">+40</button>
-      <button type="button" class="qf" data-v="50">+50</button>
-    </div>
-    <label>Надбавка (только вне МКАДа)</label>
-    <select id="allowance">
-      <option value="0">0% — без надбавок</option>
-      <option value="15">15% — город</option>
-      <option value="6">6% — климат</option>
-      <option value="21" selected>6% + 15% (климат + город)</option>
-      <option value="custom">Свой %</option>
-    </select>
-    <div id="customBox" class="hidden">
-      <label>Своя надбавка, %</label>
-      <input id="custom" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
-    </div>
-    <label>Комментарий <span style="opacity:.55">(необязательно)</span></label>
-    <input id="comment" type="text" placeholder="Маршрут..." maxlength="120" autocomplete="off">
-  </div></section>
-  <section class="result" id="resultBlock">
-    <div class="label">РАСХОД ЗА ПЕРИОД</div>
-    <div class="big"><span id="consumption">0</span> л</div>
-    <div class="r-line"><span>Период</span><strong id="periodOut">—</strong></div>
-    <div class="r-line"><span>Пробег</span><strong id="totalKm">0 км</strong></div>
-    <div class="r-line"><span>Из них МКАД</span><strong id="mkadOut">0 км</strong></div>
-    <div class="r-line"><span>Заправлено</span><strong id="addedOut">0 л</strong></div>
-    <div class="r-line"><span>Бак станет</span><strong id="endOut">0 л</strong></div>
-    <div class="r-line" style="font-size:13px;opacity:.85"><span>Формула</span><strong id="formulaOut" style="font-weight:500">—</strong></div>
-  </section>
-  <button class="primary full" id="savePeriodBtn" type="button">Сохранить период</button>
-  <div class="btn-row">
-    <button id="sendBtn" type="button">Отправить отчёт</button>
-    <button id="copyBtn" type="button">Копировать</button>
-  </div>
-  <p class="toast" id="status"></p>
-  <section class="card"><div class="card-pad">
-    <div class="card-title">История периодов</div>
-    <div id="historyList"></div>
-    <button class="ghost full" id="clearHistory" type="button" style="margin-top:6px">Очистить историю</button>
-  </div></section>
-  <div style="text-align:center;margin-top:12px">
-    <button class="ghost" id="addVehicleBtn" type="button">+ Добавить машину</button>
-  </div>
+<div class="top"><h1>⛽ Учёт машин</h1><button class="ib" id="th" type="button" aria-label="Тема">☾</button><button class="ib" id="mn" type="button" aria-label="Меню">⋯</button></div>
+<div class="chips" id="vl"></div>
+ 
+<section class="hero">
+ <div class="hg">
+  <div><small>Пробег</small><b><span id="sumOdo">—</span><em>км</em></b><i id="oN"></i></div>
+  <div><small>В баке</small><b><span id="sumFuel">—</span><em>л</em></b><i id="fN"></i></div>
+ </div>
+ <div class="gauge" id="gg"><u class="n" id="gN"></u><u class="a" id="gA"></u></div>
+ <div class="meta" id="meta">—</div>
+</section>
+ 
+<section class="card">
+ <div class="g"><label class="f"><span>С даты</span><input id="d1" type="date"></label><label class="f"><span>По дату</span><input id="d2" type="date"></label></div>
+ <div class="g"><label class="f"><span>Проехал, км</span><input id="kT" inputmode="decimal" placeholder="0" autocomplete="off"></label><label class="f"><span>Конечный пробег</span><input id="oE" inputmode="numeric" placeholder="—" autocomplete="off"></label></div>
+ <div class="g"><label class="f"><span>По МКАД, км</span><input id="kM" inputmode="decimal" placeholder="0" autocomplete="off"></label><label class="f"><span>Вне МКАД, км</span><input id="kO" inputmode="decimal" placeholder="0" autocomplete="off"></label></div>
+ <div class="sp"><u class="d1" id="s1"></u><u class="d2" id="s2"></u></div>
+ <div class="ck" id="ck"><span>Укажите пробег</span><b>0 км</b></div>
+ <label class="f"><span>Заправил, л</span><input id="tk" inputmode="decimal" placeholder="0" autocomplete="off"></label>
+ <div class="qs" id="qf"><button type="button" data-v="10">+10</button><button type="button" data-v="20">+20</button><button type="button" data-v="30">+30</button><button type="button" data-v="40">+40</button><button type="button" data-v="50">+50</button><button type="button" data-v="0" aria-label="Сбросить">✕</button></div>
+ <div class="lb">Надбавка вне МКАД</div>
+ <div class="seg" id="al">
+  <button type="button" data-v="0"><b>0%</b><small>нет</small></button>
+  <button type="button" data-v="6"><b>6%</b><small>климат</small></button>
+  <button type="button" data-v="15"><b>15%</b><small>город</small></button>
+  <button type="button" data-v="21" class="on"><b>21%</b><small>оба</small></button>
+  <button type="button" data-v="c"><b>±</b><small>свой</small></button>
+ </div>
+ <label class="f hidden" id="cb"><span>Своя надбавка, %</span><input id="cu" inputmode="decimal" placeholder="0" autocomplete="off"></label>
+ <label class="f"><span>Комментарий</span><input id="cm" type="text" maxlength="120" placeholder="Маршрут…" autocomplete="off" style="font-size:16px;font-weight:600"></label>
+</section>
+ 
+<section class="card">
+ <div class="rt"><div><div class="lb">Расход за период</div><div class="big"><span id="cons">0</span><em>л</em></div></div><div><div class="lb">Пробег</div><div class="km" id="kmO">0 км</div></div></div>
+ <div class="bd"><i class="d1"></i><span id="f1">МКАД</span><b id="c1">0 л</b></div>
+ <div class="bd"><i class="d2"></i><span id="f2">Вне МКАД</span><b id="c2">0 л</b></div>
+ <div class="bd"><i style="background:var(--fg)"></i><span id="f3">Бак</span><b id="eO">0 л</b></div>
+ <div class="wn" id="wn"></div>
+ <div class="act"><button class="pr" id="sv" type="button">Сохранить период</button><button class="ib2" id="cp" type="button" aria-label="Копировать">⧉</button><button class="ib2" id="shr" type="button" aria-label="Отправить отчёт">↗</button></div>
+</section>
+ 
+<details class="card"><summary>История периодов <span id="hc"></span></summary><div id="hl"></div><button class="gh" id="clr" type="button">Очистить историю</button></details>
 </main>
-
-<div class="overlay" id="vehicleOverlay">
-  <div class="modal">
-    <h3 id="modalTitle">Новая машина</h3>
-    <p class="desc" id="modalDesc">Данные сохраняются на этом телефоне и привязаны к машине.</p>
-    <label>Марка / модель</label><select id="mCar"></select>
-    <label>Позывной / код</label><input id="mCode" type="text" placeholder="М-12 или любой код" maxlength="16" autocomplete="off">
-    <label>ФИО водителя <span style="opacity:.55">(необязательно)</span></label><input id="mFio" type="text" placeholder="Иванов И.И." maxlength="60" autocomplete="name">
-    <div class="row">
-      <div><label>Текущий пробег</label><input id="mOdo" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
-      <div><label>Бак сейчас, л</label><input id="mFuel" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
-    </div>
-    <div id="mManualBox" class="hidden"><label>Норма расхода (л/км)</label><input id="mManualNorm" type="text" inputmode="decimal" value="0,098" autocomplete="off"></div>
-    <button class="primary full" id="modalSave" type="button" style="margin-top:6px">Сохранить</button>
-    <button class="ghost full" id="modalCancel" type="button">Отмена</button>
-  </div>
-</div>
-
-<div class="overlay" id="menuOverlay">
-  <div class="modal" style="padding-bottom:calc(14px + var(--safe-b))">
-    <h3 style="margin-bottom:14px">Меню</h3>
-    <button class="full" id="menuEdit" type="button" style="margin-bottom:8px">Изменить текущую машину</button>
-    <button class="full" id="menuReset" type="button" style="margin-bottom:8px;color:var(--err)">Сбросить всё</button>
-    <button class="ghost full" id="menuClose" type="button">Закрыть</button>
-  </div>
-</div>
-
+ 
+<div class="ov" id="vo"><div class="sh">
+ <h3 id="mt">Новая машина</h3>
+ <label class="f"><span>Марка / модель</span><select id="mCar"></select></label>
+ <label class="f"><span>Позывной / код</span><input id="mCode" maxlength="16" placeholder="М-12 или любой код" autocomplete="off"></label>
+ <label class="f"><span>ФИО водителя (необязательно)</span><input id="mFio" maxlength="60" placeholder="Иванов И.И." autocomplete="name"></label>
+ <div class="g"><label class="f"><span>Текущий пробег</span><input id="mOdo" inputmode="numeric" placeholder="0" autocomplete="off"></label><label class="f"><span>Бак сейчас, л</span><input id="mFuel" inputmode="decimal" placeholder="0" autocomplete="off"></label></div>
+ <label class="f hidden" id="mnb"><span>Норма расхода, л/км</span><input id="mNorm" inputmode="decimal" value="0,098" autocomplete="off"></label>
+ <button class="pr" id="mSave" type="button">Сохранить</button>
+ <button class="gh" id="mCancel" type="button">Отмена</button>
+</div></div>
+ 
+<div class="ov" id="mo"><div class="sh">
+ <h3>Меню</h3>
+ <button class="menu" id="mEdit" type="button">Изменить машину</button>
+ <button class="menu" id="mDel" type="button" style="color:var(--er)">Удалить машину</button>
+ <button class="menu" id="mReset" type="button" style="color:var(--er)">Сбросить всё</button>
+ <button class="gh" id="mClose" type="button">Закрыть</button>
+</div></div>
+<div class="ts" id="ts"></div>
+ 
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-const STORAGE='uchet_v2';
+const KEY='uchet_v2';
 const CARS=[['Москвич 3',50,'АИ-92',0.098],['SENAT 900',62,'АИ-95',null],['Haval Jolion',55,'АИ-92',0.092],['Hyundai Sonata',60,'АИ-92',0.087],['Луидор-225033',80,'АИ-92',0.16],['Аврора - 311302',80,'ДТ',0.127],['ПАЗ - 32053 - 50',105,'АИ-92',0.32],['ПАЗ - 320530 - 02',105,'АИ-92',0.339],['КАВЗ 4238 - 62',170,'ДТ',0.36],['КАВЗ 4238 - D1',170,'ДТ',0.373],['ПАЗ - 4234 - 04',95,'ДТ',0.224],['Volkswagen M',80,'ДТ',0.084],['ГАЗ A65 R32',80,'ДТ',0.154],['ACM - 535251',80,'ДТ',0.15],['Sollers Atlant',80,'ДТ',0.121],['Ford Transit',80,'ДТ',0.145]];
-let vehicles=[],activeId=null,editMode=false,saveTimer=null,odoAuto=false;
-const num=v=>{const raw=String(v??'').trim().replace(',','.');if(raw===''||raw==='-')return 0;const n=Number(raw);return Number.isFinite(n)?Math.max(0,n):0};
+let V=[],aid=null,edit=false,last='m',al='21',theme=null,tt,R=null;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const num=v=>{const r=String(v??'').trim().replace(',','.');if(r===''||r==='-')return 0;const n=Number(r);return Number.isFinite(n)?Math.max(0,n):0};
 const fmt=(x,d=1)=>(Number(x)||0).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
-const round=(x,d=1)=>Math.round((Number(x)||0)*10**d)/10**d;
+const rnd=(x,d=1)=>Math.round((Number(x)||0)*10**d)/10**d;
+const nf=x=>String(x).replace('.',',');
 const uid=()=>Math.random().toString(36).slice(2,10);
-const toast=msg=>{$('status').textContent=msg;setTimeout(()=>{if($('status').textContent===msg)$('status').textContent=''},2400)};
-const today=()=>new Date().toISOString().slice(0,10);
-function carData(v){const c=CARS[v.carIdx]||CARS[0];return{name:c[0],tank:c[1],fuelType:c[2],norm:v.manualNorm!=null&&v.manualNorm!==''?num(v.manualNorm):c[3]}}
-function active(){return vehicles.find(v=>v.id===activeId)||vehicles[0]}
-function collect(){return{vehicles,activeId,dark:document.body.classList.contains('dark')}}
-function save(show){try{localStorage.setItem(STORAGE,JSON.stringify(collect()));if(show)toast('Сохранено')}catch(e){if(show)toast('Ошибка сохранения')}}
-function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>save(false),400)}
-function load(){try{const raw=localStorage.getItem(STORAGE);if(!raw)return false;const s=JSON.parse(raw);if(Array.isArray(s.vehicles)&&s.vehicles.length){vehicles=s.vehicles;activeId=s.activeId||vehicles[0].id;if(s.dark){document.body.classList.add('dark');$('themeBtn').textContent='☀'}return true}}catch(e){}return false}
-function renderVehicleList(){const list=$('vehicleList');if(!vehicles.length){list.innerHTML='';return}list.innerHTML=vehicles.map(v=>{const c=carData(v);return `<div class="v-pill${v.id===activeId?' active':''}" data-id="${v.id}">${c.name} · ${v.code||'—'}</div>`}).join('')}
-function renderHeader(){const v=active();if(!v){$('headerSub').textContent='Добавьте первую машину';$('sumOdo').textContent='—';$('sumFuel').textContent='—';$('carMeta').textContent='—';return}const c=carData(v);$('headerSub').textContent=`${c.name} · ${v.code||'—'}`;$('sumOdo').textContent=fmt(v.odo,0);$('sumFuel').textContent=fmt(v.fuel,1)+' л';$('carMeta').textContent=`${c.fuelType} · норма ${c.norm?fmt(c.norm*100,1)+' л/100км':'ручная'} · бак ${c.tank} л`}
-function renderHistory(){const v=active();const list=$('historyList');if(!v||!v.periods||!v.periods.length){list.innerHTML='<div class="empty">Пока нет периодов</div>';return}const rows=[...v.periods].reverse();list.innerHTML=rows.map(p=>`<div class="period-card"><div class="period-dates">${p.dateFrom||'—'} → ${p.dateTo||'—'}</div><div class="period-meta">${fmt(p.km,0)} км (МКАД ${fmt(p.kmMkad||0,0)}) · расход ${fmt(p.cons,1)} л · запр. ${fmt(p.added,1)} л${p.comment?'<br>'+p.comment:''}</div></div>`).join('')}
-function update(){const v=active();if(!v)return;const c=carData(v);const odoEnd=num($('odoEnd').value);if(odoEnd>0&&v.odo>0&&!odoAuto){const diff=round(odoEnd-v.odo,1);if(diff>0){odoAuto=true;$('kmTotal').value=String(diff).replace('.',',');odoAuto=false}}let kmTotal=num($('kmTotal').value);let kmMkad=num($('kmMkad').value);let kmOther=num($('kmOther').value);if(kmTotal>0&&kmMkad>=0&&document.activeElement!==$('kmOther')){const autoOther=round(kmTotal-kmMkad,1);if(autoOther>=0&&Math.abs(autoOther-kmOther)>0.05){kmOther=autoOther;$('kmOther').value=String(autoOther).replace('.',',')}}const sumParts=round(kmMkad+kmOther,1);const checkEl=$('kmCheck');if(kmTotal>0&&Math.abs(sumParts-kmTotal)>0.3){checkEl.textContent=`МКАД + без = ${fmt(sumParts)} ≠ ${fmt(kmTotal)}`;checkEl.className='check bad'}else{checkEl.textContent=`МКАД + без = ${fmt(sumParts)} км`;checkEl.className='check'+(sumParts>0?' ok':'')}let allow=+$('allowance').value;if($('allowance').value==='custom')allow=num($('custom').value);const baseNorm=c.norm||0.1;const consMkad=kmMkad*baseNorm;const consOther=kmOther*baseNorm*(1+allow/100);const cons=round(consMkad+consOther,2);const added=num($('tankAdded').value);const endFuel=round(v.fuel+added-cons,1);const dateFrom=$('dateFrom').value;const dateTo=$('dateTo').value;$('consumption').textContent=fmt(cons,1);$('periodOut').textContent=(dateFrom&&dateTo)?`${dateFrom} → ${dateTo}`:'—';$('totalKm').textContent=fmt(kmTotal,0)+' км';$('mkadOut').textContent=fmt(kmMkad,0)+' км';$('addedOut').textContent=fmt(added,1)+' л';$('endOut').textContent=fmt(endFuel,1)+' л';$('formulaOut').textContent=`МКАД ${fmt(kmMkad,0)}×${fmt(baseNorm*100,1)} + вне ${fmt(kmOther,0)}×${fmt(baseNorm*100*(1+allow/100),1)}`}
-function savePeriod(){const v=active();if(!v){toast('Сначала добавьте машину');return}const dateFrom=$('dateFrom').value;const dateTo=$('dateTo').value;const kmTotal=num($('kmTotal').value);const kmMkad=num($('kmMkad').value);const kmOther=num($('kmOther').value);if(!dateFrom||!dateTo){toast('Укажите даты периода');return}if(kmTotal<=0){toast('Введите пробег');return}let allow=+$('allowance').value;if($('allowance').value==='custom')allow=num($('custom').value);const c=carData(v);const baseNorm=c.norm||0.1;const cons=round(kmMkad*baseNorm+kmOther*baseNorm*(1+allow/100),2);const added=num($('tankAdded').value);const odoEnd=num($('odoEnd').value);const newOdo=odoEnd>0?odoEnd:round(v.odo+kmTotal,0);const endFuel=round(v.fuel+added-cons,1);v.periods=v.periods||[];v.periods.push({id:uid(),dateFrom,dateTo,km:kmTotal,kmMkad,kmOther,cons,added,fuelStart:v.fuel,fuelEnd:endFuel,odo:newOdo,allow,comment:$('comment').value.trim(),createdAt:new Date().toISOString()});v.odo=newOdo;v.fuel=Math.max(0,endFuel);$('kmTotal').value='';$('odoEnd').value='';$('kmMkad').value='';$('kmOther').value='';$('tankAdded').value='';$('comment').value='';$('dateFrom').value=today();$('dateTo').value=today();renderHeader();renderHistory();update();save(true);toast('Период сохранён')}
-function openVehicleModal(edit){editMode=!!edit;$('modalTitle').textContent=edit?'Изменить машину':'Новая машина';$('modalDesc').textContent=edit?'Можно поменять модель, позывной и текущие показания.':'Данные сохраняются на этом телефоне и привязаны к машине.';if(edit&&active()){const v=active();$('mCar').value=v.carIdx;$('mCode').value=v.code||'';$('mFio').value=v.fio||'';$('mOdo').value=v.odo||'';$('mFuel').value=String(v.fuel).replace('.',',');$('mManualNorm').value=v.manualNorm||''}else{$('mCar').value=0;$('mCode').value='';$('mFio').value='';$('mOdo').value='';$('mFuel').value=''}onCarChange();$('vehicleOverlay').classList.add('show')}
-function closeVehicleModal(){$('vehicleOverlay').classList.remove('show')}
-function onCarChange(){const idx=+$('mCar').value;const c=CARS[idx];$('mManualBox').classList.toggle('hidden',c[3]!==null);if(c[3]!=null)$('mManualNorm').value=String(c[3]).replace('.',',')}
-function saveVehicle(){const code=$('mCode').value.trim().toUpperCase().replace(/\s+/g,'');if(!code){toast('Введите позывной или код');$('mCode').focus();return}const odo=num($('mOdo').value);const fuel=num($('mFuel').value);const carIdx=+$('mCar').value;const c=CARS[carIdx];if(fuel>c[1]+0.5){toast(`Бак максимум ${c[1]} л`);return}if(editMode&&active()){const v=active();v.carIdx=carIdx;v.code=code;v.fio=$('mFio').value.trim();v.odo=odo;v.fuel=fuel;v.manualNorm=$('mManualNorm').value}else{const v={id:uid(),carIdx,code,fio:$('mFio').value.trim(),odo,fuel,periods:[],manualNorm:$('mManualNorm').value};vehicles.push(v);activeId=v.id}closeVehicleModal();renderVehicleList();renderHeader();renderHistory();update();save(true)}
-function sendReport(){const v=active();if(!v||!v.periods||!v.periods.length){toast('Нет периодов для отправки');return}const c=carData(v);const last=v.periods[v.periods.length-1];const text=[`Машина: ${c.name} (${v.code})`,`Водитель: ${v.fio||'—'}`,`Период: ${last.dateFrom} → ${last.dateTo}`,`Пробег: ${fmt(last.km,0)} км (МКАД ${fmt(last.kmMkad||0,0)})`,`Расход: ${fmt(last.cons,1)} л`,`Заправлено: ${fmt(last.added,1)} л`,`Бак: ${fmt(last.fuelEnd,1)} л`,last.comment?`Комментарий: ${last.comment}`:''].filter(Boolean).join('\n');navigator.clipboard.writeText(text).then(()=>toast('Отчёт скопирован')).catch(()=>toast('Не удалось скопировать'))}
-function bind(){$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');$('themeBtn').textContent=document.body.classList.contains('dark')?'☀':'☾';scheduleSave()};$('vehicleList').addEventListener('click',e=>{const pill=e.target.closest('.v-pill');if(!pill)return;activeId=pill.dataset.id;renderVehicleList();renderHeader();renderHistory();$('kmTotal').value='';$('odoEnd').value='';$('kmMkad').value='';$('kmOther').value='';$('tankAdded').value='';$('comment').value='';update();save(false)});['kmTotal','odoEnd','kmMkad','kmOther','tankAdded','custom','allowance','dateFrom','dateTo'].forEach(id=>{$(id).addEventListener('input',update);$(id).addEventListener('change',update)});$('odoEnd').addEventListener('input',()=>{const v=active();if(!v)return;const odoEnd=num($('odoEnd').value);if(odoEnd>v.odo){const diff=round(odoEnd-v.odo,1);odoAuto=true;$('kmTotal').value=String(diff).replace('.',',');odoAuto=false;update()}});$('allowance').addEventListener('change',()=>{$('customBox').classList.toggle('hidden',$('allowance').value!=='custom');update()});$('quickFuel').addEventListener('click',e=>{const btn=e.target.closest('.qf');if(!btn)return;const add=+btn.dataset.v;const cur=num($('tankAdded').value);$('tankAdded').value=String(cur+add).replace('.',',');update()});$('savePeriodBtn').onclick=savePeriod;$('sendBtn').onclick=sendReport;$('copyBtn').onclick=()=>{const text=`Расход: ${$('consumption').textContent} л\nПериод: ${$('periodOut').textContent}\nПробег: ${$('totalKm').textContent}\nМКАД: ${$('mkadOut').textContent}\nЗаправлено: ${$('addedOut').textContent}`;navigator.clipboard.writeText(text).then(()=>toast('Скопировано')).catch(()=>toast('Ошибка'))};$('clearHistory').onclick=()=>{if(!confirm('Очистить историю текущей машины?'))return;const v=active();if(v)v.periods=[];renderHistory();save(true)};$('addVehicleBtn').onclick=()=>openVehicleModal(false);$('mCar').addEventListener('change',onCarChange);$('modalSave').onclick=saveVehicle;$('modalCancel').onclick=closeVehicleModal;$('vehicleOverlay').addEventListener('click',e=>{if(e.target===$('vehicleOverlay'))closeVehicleModal()});$('menuBtn').onclick=()=>$('menuOverlay').classList.add('show');$('menuClose').onclick=()=>$('menuOverlay').classList.remove('show');$('menuEdit').onclick=()=>{$('menuOverlay').classList.remove('show');openVehicleModal(true)};$('menuReset').onclick=()=>{if(!confirm('Сбросить ВСЕ данные и машины?'))return;localStorage.removeItem(STORAGE);vehicles=[];activeId=null;$('menuOverlay').classList.remove('show');renderVehicleList();renderHeader();renderHistory();update();openVehicleModal(false);toast('Всё сброшено')};$('menuOverlay').addEventListener('click',e=>{if(e.target===$('menuOverlay'))$('menuOverlay').classList.remove('show')});window.addEventListener('beforeunload',()=>{try{localStorage.setItem(STORAGE,JSON.stringify(collect()))}catch(e){}})}
-(function init(){$('mCar').innerHTML=CARS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join('');$('dateFrom').value=today();$('dateTo').value=today();bind();const hasData=load();if(!hasData||!vehicles.length){openVehicleModal(false)}else{renderVehicleList();renderHeader();renderHistory();update()}})();
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fd=s=>s?s.slice(8)+'.'+s.slice(5,7)+'.'+s.slice(2,4):'—';
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const toast=m=>{const t=$('ts');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)};
+function tw(el,to,d=1,s=''){const f=el._c??0;cancelAnimationFrame(el._r);if(reduce||f===to){el._c=to;el.textContent=fmt(to,d)+s;return}const t0=performance.now();const st=t=>{const p=Math.min(1,(t-t0)/550);el._c=p<1?f+(to-f)*(1-Math.pow(1-p,3)):to;el.textContent=fmt(el._c,d)+s;if(p<1)el._r=requestAnimationFrame(st)};el._r=requestAnimationFrame(st)}
+const sure=(b,fn)=>{if(b.dataset.s){clearTimeout(b._t);delete b.dataset.s;b.textContent=b._o;return fn()}b._o=b.textContent;b.dataset.s=1;b.textContent='Нажмите ещё раз';b._t=setTimeout(()=>{delete b.dataset.s;b.textContent=b._o},2500)};
+const copy=async(t,m)=>{try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(x){}a.remove()}toast(m)};
+const carData=v=>{const c=CARS[v.carIdx]||CARS[0];return{name:c[0],tank:c[1],fuelType:c[2],norm:v.manualNorm!=null&&v.manualNorm!==''?num(v.manualNorm):c[3]}};
+const active=()=>V.find(v=>v.id===aid)||V[0];
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({vehicles:V,activeId:aid,theme}))}catch(e){}};
+const load=()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&Array.isArray(s.vehicles)&&s.vehicles.length){V=s.vehicles;aid=s.activeId||V[0].id;theme=s.theme||(s.dark?'dark':null);return true}}catch(e){}return false};
+const isDark=()=>theme?theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+const applyTheme=()=>{if(theme)document.documentElement.dataset.theme=theme;$('th').textContent=isDark()?'☀':'☾'};
+ 
+function rChips(){const l=$('vl');l.innerHTML=V.map(v=>`<button type="button" class="chip${v.id===aid?' on':''}" data-id="${v.id}">${carData(v).name} · ${esc(v.code)}</button>`).join('')+'<button type="button" class="chip" id="add">＋ Машина</button>';const a=l.querySelector('.on');if(a)l.scrollTo({left:a.offsetLeft-30,behavior:'smooth'})}
+function rHist(){const v=active(),p=(v&&v.periods)||[];$('hc').textContent=p.length||'';$('hl').innerHTML=p.length?[...p].reverse().map(x=>`<div class="hr"><div><b>${fd(x.dateFrom)} → ${fd(x.dateTo)}</b>${x.comment?`<small>${esc(x.comment)}</small>`:''}</div><div><b>${fmt(x.cons,1)} л</b><small>${fmt(x.km,0)} км, заправка ${fmt(x.added,0)} л</small></div></div>`).join(''):'<div class="em">Пока нет периодов</div>'}
+ 
+function calc(){
+ const v=active();
+ if(!v){R=null;$('sumOdo').textContent=$('sumFuel').textContent='—';$('meta').textContent='Добавьте первую машину';return null}
+ const c=carData(v),nm=c.norm||.1;
+ let T=num(kT.value),M=num(kM.value),O=num(kO.value);
+ if(T>0){if(last==='m'){O=rnd(Math.max(0,T-M),1);if(document.activeElement!==kO)kO.value=O?nf(O):''}else{M=rnd(Math.max(0,T-O),1);if(document.activeElement!==kM)kM.value=M?nf(M):''}}
+ const sum=rnd(M+O,1),km=T>0?T:sum,a=al==='c'?num(cu.value):+al,n2=nm*(1+a/100),c1=M*nm,c2=O*n2,cons=rnd(c1+c2,2),add=num(tk.value),end=rnd(v.fuel+add-cons,1),no=num(oE.value)>0?num(oE.value):rnd(v.odo+km,0);
+ const bad=T>0&&Math.abs(sum-T)>.3,p=sum>0?Math.round(M/sum*100):0;
+ $('ck').className='ck '+(bad?'bad':sum>0?'ok':'');
+ $('ck').innerHTML=sum?`<span>${bad?'Сумма не равна пробегу':`МКАД ${p}%, вне ${100-p}%`}</span><b>${fmt(sum)}${bad?' ≠ '+fmt(T):''} км</b>`:'<span>Укажите пробег</span><b>0 км</b>';
+ $('s1').style.width=(sum?M/sum*100:0)+'%';$('s2').style.width=(sum?O/sum*100:0)+'%';
+ oE.placeholder=km>0?String(no):'—';
+ tw($('sumOdo'),v.odo,0);tw($('sumFuel'),v.fuel,1);
+ $('oN').textContent=km>0?'→ '+fmt(no,0)+' км':'';$('oN').classList.toggle('s',km>0);
+ const ch=add>0||cons>0,wr=end<0||end>c.tank;
+ $('fN').textContent=ch?'→ '+fmt(end,1)+' л':'';$('fN').className=(ch?'s':'')+(wr?' w':'');
+ const pc=x=>Math.max(0,Math.min(100,x/c.tank*100))+'%';
+ $('gN').style.width=pc(v.fuel);$('gA').style.width=pc(end);$('gg').className='gauge'+(end<0||end>c.tank?' neg':end<c.tank*.15?' low':'');
+ $('meta').textContent=`${c.fuelType}, ${c.norm?fmt(c.norm*100,1)+' л/100 км':'норма вручную'}, бак ${c.tank} л`+(v.fio?', '+v.fio:'');
+ tw($('cons'),cons,1);tw($('kmO'),km,0,' км');tw($('c1'),c1,1,' л');tw($('c2'),c2,1,' л');tw($('eO'),end,1,' л');
+ $('f1').textContent=`МКАД ${fmt(M,0)} км × ${fmt(nm*100,1)}`;
+ $('f2').textContent=`Вне ${fmt(O,0)} км × ${fmt(n2*100,1)}`+(a?` (+${a}%)`:'');
+ $('f3').textContent=`Бак ${fmt(v.fuel,1)} + ${fmt(add,1)} − ${fmt(cons,1)}`;
+ $('wn').textContent=end<0?`Не хватает ${fmt(-end,1)} л`:end>c.tank?`Больше бака на ${fmt(end-c.tank,1)} л`:'';
+ return R={v,c,nm,a,M,O,km,cons,add,end,no};
+}
+const kT=$('kT'),kM=$('kM'),kO=$('kO'),oE=$('oE'),tk=$('tk'),cu=$('cu'),d1=$('d1'),d2=$('d2'),cm=$('cm');
+const clr=()=>{[kT,oE,kM,kO,tk,cm].forEach(e=>e.value='');last='m'};
+const all=()=>{rChips();rHist();calc()};
+const rep=(c,v,o)=>`Машина: ${c.name} (${v.code})\nВодитель: ${v.fio||'—'}\nПериод: ${fd(o.dateFrom)} → ${fd(o.dateTo)}\nПробег: ${fmt(o.km,0)} км (МКАД ${fmt(o.kmMkad||0,0)})\nРасход: ${fmt(o.cons,1)} л\nЗаправлено: ${fmt(o.added,1)} л\nБак: ${fmt(o.fuelEnd,1)} л`+(o.comment?`\nКомментарий: ${o.comment}`:'');
+ 
+function savePeriod(){
+ if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+ const r=calc();if(!r)return toast('Сначала добавьте машину');
+ if(!d1.value||!d2.value)return toast('Укажите даты периода');
+ if(r.km<=0)return toast('Введите пробег');
+ const v=r.v;v.periods=v.periods||[];
+ v.periods.push({id:uid(),dateFrom:d1.value,dateTo:d2.value,km:r.km,kmMkad:r.M,kmOther:r.O,cons:r.cons,added:r.add,fuelStart:v.fuel,fuelEnd:r.end,odo:r.no,allow:r.a,comment:cm.value.trim(),createdAt:new Date().toISOString()});
+ v.odo=r.no;v.fuel=Math.max(0,r.end);clr();d1.value=d2.value=today();all();save();
+ const b=$('sv');b.classList.add('done');b.textContent='✓ Сохранено';setTimeout(()=>{b.classList.remove('done');b.textContent='Сохранить период'},1500);
+}
+function openV(e){edit=!!e;$('mt').textContent=e?'Изменить машину':'Новая машина';const v=e&&active();
+ $('mCar').value=v?v.carIdx:0;$('mCode').value=v?v.code||'':'';$('mFio').value=v?v.fio||'':'';$('mOdo').value=v&&v.odo?v.odo:'';$('mFuel').value=v?nf(v.fuel):'';$('mNorm').value=v&&v.manualNorm?v.manualNorm:'';
+ onCar();$('vo').classList.add('show')}
+function onCar(){const c=CARS[+$('mCar').value];$('mnb').classList.toggle('hidden',c[3]!==null);if(c[3]!=null)$('mNorm').value=nf(c[3])}
+function saveV(){
+ const code=$('mCode').value.trim().toUpperCase().replace(/\s+/g,'');if(!code){toast('Введите позывной или код');$('mCode').focus();return}
+ const carIdx=+$('mCar').value,c=CARS[carIdx],fuel=num($('mFuel').value),odo=num($('mOdo').value);
+ if(fuel>c[1]+.5){toast(`Бак максимум ${c[1]} л`);return}
+ const d={carIdx,code,fio:$('mFio').value.trim(),odo,fuel,manualNorm:$('mNorm').value};
+ if(edit&&active())Object.assign(active(),d);else{const v={id:uid(),periods:[],...d};V.push(v);aid=v.id;clr()}
+ $('vo').classList.remove('show');all();save();toast('Сохранено');
+}
+function bind(){
+ $('th').onclick=()=>{theme=isDark()?'light':'dark';applyTheme();save()};
+ $('vl').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;if(b.id==='add')return openV(false);aid=b.dataset.id;clr();all();save()});
+ kT.addEventListener('input',()=>{oE.value='';calc()});
+ kM.addEventListener('input',()=>{last='m';calc()});
+ kO.addEventListener('input',()=>{last='o';calc()});
+ oE.addEventListener('input',()=>{const v=active(),e=num(oE.value);if(v&&e>v.odo)kT.value=nf(rnd(e-v.odo,1));calc()});
+ [tk,cu].forEach(e=>e.addEventListener('input',calc));
+ $('qf').onclick=e=>{const b=e.target.closest('button');if(!b)return;const a=+b.dataset.v;tk.value=a?nf(num(tk.value)+a):'';calc()};
+ $('al').onclick=e=>{const b=e.target.closest('button');if(!b)return;al=b.dataset.v;[...$('al').children].forEach(x=>x.classList.toggle('on',x===b));$('cb').classList.toggle('hidden',al!=='c');if(al==='c')cu.focus();calc()};
+ $('sv').onclick=savePeriod;
+ $('cp').onclick=()=>{const r=calc();if(!r||r.km<=0)return toast('Нечего копировать');copy(rep(r.c,r.v,{dateFrom:d1.value,dateTo:d2.value,km:r.km,kmMkad:r.M,cons:r.cons,added:r.add,fuelEnd:r.end,comment:cm.value.trim()}),'Скопировано')};
+ $('shr').onclick=async()=>{const v=active(),p=v&&v.periods&&v.periods[v.periods.length-1];if(!p)return toast('Нет сохранённых периодов');const t=rep(carData(v),v,p);if(navigator.share){try{await navigator.share({text:t});return}catch(e){if(e.name==='AbortError')return}}copy(t,'Отчёт скопирован')};
+ $('clr').onclick=function(){sure(this,()=>{const v=active();if(v)v.periods=[];rHist();save()})};
+ $('mCar').onchange=onCar;$('mSave').onclick=saveV;$('mCancel').onclick=()=>$('vo').classList.remove('show');
+ $('mn').onclick=()=>$('mo').classList.add('show');$('mClose').onclick=()=>$('mo').classList.remove('show');
+ $('mEdit').onclick=()=>{$('mo').classList.remove('show');if(active())openV(true)};
+ $('mDel').onclick=function(){sure(this,()=>{const v=active();if(!v)return;V=V.filter(x=>x!==v);aid=V[0]?V[0].id:null;$('mo').classList.remove('show');clr();all();save();if(!V.length)openV(false)})};
+ $('mReset').onclick=function(){sure(this,()=>{try{localStorage.removeItem(KEY)}catch(e){}V=[];aid=null;$('mo').classList.remove('show');clr();all();openV(false);toast('Всё сброшено')})};
+ ['vo','mo'].forEach(i=>$(i).addEventListener('click',e=>{if(e.target===$(i))$(i).classList.remove('show')}));
+}
+$('mCar').innerHTML=CARS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join('');
+d1.value=d2.value=today();
+const has=load();applyTheme();bind();all();if(!has)openV(false);
 })();
 </script>
 </body>
 </html>
+ 
